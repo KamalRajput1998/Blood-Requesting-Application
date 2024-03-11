@@ -1,0 +1,711 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+
+<br>
+
+<div class="col text-center">
+
+  <!-- Button trigger modal for blood form -->
+  <button type="button" class="btn btn-danger btn d-grid gap-2 col-6 mx-auto btn-lg" data-bs-toggle="modal" data-bs-target="#BloodFormModal">Request blood components<i class="bi bi-plus-circle-dotted"></i>
+  </button>
+
+  <br>
+
+  <!-- Button trigger modal for blood requests-->
+  <button type="button" class="btn btn-primary d-grid gap-2 col-6 mx-auto btn-lg" data-bs-toggle="modal" data-bs-target="#BloodRequestModal" id="getRecords">
+      View live requests<i class="bi bi-view-list"></i>
+  </button>
+
+  <br>
+
+  <!-- Button trigger modal for about -->
+  <button type="button" class="btn btn-info d-grid gap-2 col-6 mx-auto btn-lg" data-bs-toggle="modal" data-bs-target="#aboutModal">
+    About<i class="bi bi-info-circle"></i>
+  </button>
+
+  <br>
+
+  <!-- Button trigger modal for updates -->
+  <button type="button" class="btn btn-secondary d-grid gap-2 col-6 mx-auto btn-lg" data-bs-toggle="modal" data-bs-target="#updatesModal">
+    Updates made to application
+    <i><br></i>
+  </button>
+
+</div>
+
+<!-- Modal for about -->
+<div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">About</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        A prototype of electronic blood form for NerveCentre team to develop.
+        <br>
+        <br>
+        Development: Real-time application developed using JavaScript & Python.
+        <br>
+        <br>
+        ©Kamal Rajput 2024
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br>
+
+<!-- Modal for updates -->
+<div class="modal fade" id="updatesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Version v1.1</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Additional fields added to blood form for reason of requesting blood component.
+        <br>
+        <br>
+        Boolean value of 'True' or 'False' changed to 'Yes' or 'No'. 
+        <br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal For Blood Form-->
+<div class="modal fade" id="BloodFormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Electronic Blood Form</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+      <!--Form-->
+      <form id="Bloodform">
+
+        <div class="mb-3">
+          <label>System Number</label>
+          <!--Options are hardcoded in the interim, can modify code to retrieve values from dimension table (views.py will need modifying)-->
+          <select class="form-select" name="SystemNumber" required>
+            <option selected></option>
+            <option>S1234</option>
+            <option>S1235</option>
+            <option>S1236</option>
+            <option>S1237</option>
+            <option>S1238</option>
+          </select>
+        </div>
+
+        <hr>
+
+        <div class="mb-3">
+          <input type="checkbox" class="form-check-input" id="Pregnant">
+          <label>Recent pregnancy in the last 3 months?</label>
+        </div>
+
+        <div class="mb-3">
+          <input type="checkbox" class="form-check-input" id="Transfusion">
+          <label>Has the patient been transfused in the last 3 months?</label>
+        </div>
+
+        <div class="mb-3">
+          <input type="checkbox" class="form-check-input" id="HighRisk">
+          <label>Tick only if specimen poses high risk of cross infection</label>
+        </div>
+
+        <hr>
+
+        <div class="mb-3">
+          <label>Diagnosis</label>
+          <input type="text" class="form-control" id="Diagnosis" placeholder="Diagnosis" required>
+        </div>
+
+        <hr>
+        
+        <div class="mb-3">
+          <input type="checkbox" class="form-check-input" id="G&S">
+          <label>G&S</label>
+        </div>
+
+        <div class="mb-3">
+          <input type="checkbox" class="form-check-input" id="DAT">
+          <label>DAT</label>
+        </div>
+
+        <div class="mb-3">
+          <label>Other test</label>
+          <input type="text" class="form-control" id="OtherTest" placeholder="Other test">
+        </div>
+
+        <hr>
+
+          <div class="mb-3">
+            <label>CMV Negative</label>
+            <select class="form-control" name="CMV">
+              <option selected>None</option>
+              <option>Intrauterine Transfusions</option>
+              <option>Neonates up to 28 days old from EDD</option>
+              <option>Planned transfusions during pregnancy</option>
+              <option>Congenital cardiac surgery patient aged &lt;1 year</option>
+            </select>
+          </div>
+    
+          <div class="mb-3">
+            <label>Irradiated products</label>
+            <select class="form-control" name="IR">
+              <option selected>None</option>
+              <option>BMT / PBSCT - ALLOGRAFT Recipient</option>
+              <option>BMT / PBSCT -  AUTOGRAFT Recipient</option>
+              <option>Autograft Recipient (with TBI conditioning)</option>
+              <option>Hodgkin’s Disease (all patients regardless of stage)</option>
+              <option>Due for Bone Marrow / PBSC Harvest within next 7 days</option>
+              <option>On or previously received listed drugs</option>
+              <option>Due to receive Granulocytes or  HLA-matched platelets</option>
+              <option>To receive donations from first or second degree relative</option>
+              <option>Receiving or has received an intrauterine transfusion</option>
+              <option>Suspected or confirmed SCID</option>
+              <option>Specific demand of treatment protocol</option>
+              <option>Red cell exchange transfusion up to the age of 6 months</option>
+            </select>
+          </div>
+                
+        <hr>
+
+        <div class="mb-3">
+          <input type="checkbox" class="form-check-input" id="RC">
+          <label>Red Cells</label>
+        </div>
+
+            <div id="RC_request" style="display: none;">
+                <div class="mb-3">
+                  <label>Reason for Red Cells (Select Reason Below)</label>
+                  <select class="form-control" name="RC_Reason">
+                    <option selected></option>
+                    <option>Acute Bleeding</option>
+                    <option>Hb 70g/L stable patient</option>
+                    <option>Hb 80g/L if cardiovascular disease</option>
+                    <option>Chronic transfusion dependent anaemia</option>
+                    <option>Radiotherapy maintain Hb > 110g/L</option>
+                    <option>Exchange transfusion</option>
+                  </select>
+                </div>
+
+                <!--Work on modifying this-->            
+                <div class="mb-3">
+                  <label>Other reason for Red Cells not listed above (Text Field)</label>
+                  <input type="text" class="form-control" id="OtherReason_RC" placeholder="Other reason">
+                </div>
+
+                <div class="mb-3">
+                  <label>Units or milliliters</label>
+                  <select class="form-control" name="RC_Metric">
+                    <option selected>Units</option>
+                    <option>Milliliters</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label>Quantity</label>
+                  <input class="form-control" type="number" value="0" min="0" max="5000" id="RC_Quantity">
+                </div>
+            </div>
+
+        <div class="mb-3">
+          <input type="checkbox" class="form-check-input" id="PLT">
+          <label>Platelets</label>
+        </div>
+   
+            <div id="PLT_request" style="display: none;">
+                <div class="mb-3">
+                  <label>Reason for Platelets (Select Reason Below)</label>
+                  <select class="form-control" name="PLT_Reason">
+                    <option selected></option>
+                    <option>Plt &lt;10 x 10*9/L reversible bone marrow failure</option>
+                    <option>Plt 10 - 20 x 10*9/L sepsis / haemostatic abnormality</option>
+                    <option>To prevent bleeding associated with invasive procedures</option>
+                    <option>Major haemorrhage Plt </option>
+                    <option>DIC or if bleeding</option>
+                    <option>Platelet dysfunction</option>
+                  </select>
+                </div>
+
+                <!--Work on modifying this-->
+                <div class="mb-3">
+                  <label>Other reason for Platelets not listed above (Text Field)</label>
+                  <input  type="text" class="form-control" id="OtherReason_PLT" placeholder="Other reason">
+                </div>
+
+                <div class="mb-3">
+                  <label>Units or milliliters</label>
+                  <select class="form-control" name="PLT_Metric">
+                    <option selected>Units</option>
+                    <option>Milliliters</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label>Quantity</label>
+                  <input class="form-control" type="number" value="0" min="0" max="5000" id="PLT_Quantity">
+                </div>
+            </div>
+
+        <div class="mb-3">
+          <input type="checkbox" class="form-check-input" id="FFP">
+          <label>Fresh Frozen Plasma</label>
+        </div>
+
+            <div id="FFP_request" style="display: none;">
+                <div class="mb-3">
+                  <label>Reason for Fresh Frozen Plasma (Select Reason Below)</label>
+                  <select class="form-control" name="FFP_Reason">
+                    <option selected></option>
+                    <option>Major haemorrhage</option>
+                    <option>PT Ratio / INR > 1.5 with bleeding</option>
+                    <option>PT Ratio / INR >1.5 and pre-procedure</option>
+                    <option>Liver disease with PT Ratio/INR > 2 and pre-procedure</option>
+                    <option>TTP / plasma exchange.</option>
+                    <option>Replacement of single coagulation factor</option>
+                  </select>
+                </div>
+
+                <!--Work on modifying this-->
+                <div class="mb-3">
+                  <label>Other reason for Fresh Frozen Plasma not listed above (Text Field)</label>
+                  <input type="text" class="form-control" id="OtherReason_FFP" placeholder="Other reason">
+                </div>
+
+                <div class="mb-3">
+                  <label>Units or milliliters</label>
+                  <select class="form-control" name="FFP_Metric">
+                    <option selected>Units</option>
+                    <option>Milliliters</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label>Quantity</label>
+                  <input class="form-control" type="number" value="0" min="0" max="5000" id="FFP_Quantity">
+                </div>
+            </div>
+
+        <div class="mb-3">
+          <input type="checkbox" class="form-check-input" id="CRYO">
+          <label>Cryoprecipitate</label>
+        </div>
+        
+            <div id="CRYO_request" style="display: none;">
+                <div class="mb-3">
+                  <label>Reason for Cryoprecipitate (Select Reason Below)</label>
+                  <select class="form-control" name="CRYO_Reason">
+                    <option selected></option>
+                    <option>Clinically significant bleeding and fibrinogen &lt;1.5g/L (&lt;2g/L in obstetric bleeding)</option>
+                    <option>Fibrinogen &lt;1g/L and pre procedure</option>
+                    <option>Bleeding associated with thrombolytic therapy</option>
+                    <option>Inherited hypofibrinogenemia, fibrinogen concentrate not available</option>
+                  </select>
+                </div>
+
+                <!--Work on modifying this-->
+                <div class="mb-3">
+                  <label>Other reason for Cryoprecipitate not listed above (Text Field)</label>
+                  <input type="text" class="form-control" id="OtherReason_CRYO" placeholder="Other reason">
+                </div>
+
+                <div class="mb-3">
+                  <label>Units or milliliters</label>
+                  <select class="form-control" name="CRYO_Metric">
+                    <option selected>Units (pools)</option>
+                    <option>Milliliters</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label>Quantity</label>
+                  <input class="form-control" type="number" value="0" min="0" max="5000" id="CRYO_Quantity">
+                </div>
+            </div>
+
+        <hr>
+
+        <div class="mb-3">
+          <label>Date & Time Required</label>
+          <input type="datetime-local" class="form-control" id="DateTimeRequired" required>
+        </div>
+
+        <hr>
+
+        <div class="mb-3">
+          <input type="checkbox" class="form-check-input" id="Urgent">
+          <label>Urgent?</label>
+        </div>
+
+        
+        <div class="modal-footer">
+
+          <button type="submit" class="btn btn-success">Submit</button>
+
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+        </div>
+
+      </form>
+
+      </div>
+      
+      </div>
+
+    </div>
+
+  </div>
+
+<!-- Modal for live requests -->
+<div class="modal fade" id="BloodRequestModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Live requests</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body table-responsive">
+
+
+            <table id="LiveRequests" class="table table-sm table-striped table-hover table-bordered">
+              <thead class="table-light">
+                <th>Requester's name</th>
+                <th>Requester's occupation</th>
+                <th>Requester's extension</th>
+                <th>Urgent request?</th>
+                <th>System Number</th>
+                <th>Recent pregnancy?</th>
+                <th>Transfused in the last 3 months?</th>
+                <th>Diagnosis</th>
+                <th>Specimen poses high risk of cross infection?</th>
+                <th>G&S test</th>
+                <th>DAT test</th>
+                <th>Other test</th>
+                <th>Date & Time Required</th>
+                <th>CMV Negative</th>
+                <th>Irradiated Products</th>
+                <th>Red Cells?</th>
+                <th>Reason for red cells</th>
+                <th>Other reason for red cells</th>
+                <th>Quantity for red cells</th>
+                <th>Platelets?</th>
+                <th>Reason for platelets</th>
+                <th>Other reason for platelets</th>
+                <th>Quantity for platelets</th>
+                <th>FFP?</th>
+                <th>Reason for FFP</th>
+                <th>Other reason for FFP</th>
+                <th>Quantity for FFP</th>
+                <th>Cryo?</th>
+                <th>Reason for Cryo</th>
+                <th>Other reason for Cryo</th>
+                <th>Quantity for Cryo</th>
+              </thead>
+              <tbody id="bloodRequests">
+              
+
+              </tbody>
+            </table>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<br>
+
+<h1>Login</h1>
+
+<form method = "POST" action="">
+    {% csrf_token %}
+    <br/>
+    <form>
+        <div class="mb-3">
+          <input type="text" class="form-control" name = "username", placeholder="Username" required>
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" name = "password", placeholder="Password" required>
+        </div>
+        <br/>
+        <button type="submit" class="btn btn-secondary">Login</button>
+      </form>
+</form>
+
+{% endif %}
+
+{% endblock content %}
+
+{% block javascript %}
+
+<script>
+
+//CSRF token in Django https://docs.djangoproject.com/en/3.2/ref/csrf/#acquiring-the-token-if-csrf-use-sessions-and-csrf-cookie-httponly-are-false
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Does this cookie string begin with the name we want?
+      if (cookie.substring(0, name.length + 1) === (name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+//GET request using Fetch API
+function getAllRecords(url_page) {
+  
+  fetch(url_page, {
+    headers: {
+      "X-Requested-With": "XMLHttpRequest",
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+
+    const RequestList = document.querySelector("#bloodRequests");
+
+    RequestList.innerHTML = "";
+
+    (data.context).forEach(bloodRecords => {
+      
+      const bloodRequestElements = 
+        `<tr>
+          <td>${bloodRecords.User__Fullname}</td>
+          <td>${bloodRecords.User__Occupation}</td>
+          <td>${bloodRecords.User__Extension}</td>
+          <td>${bloodRecords.Urgent}</td>
+          <td>${bloodRecords.System_Number}</td>
+          <td>${bloodRecords.Pregnant}</td>
+          <td>${bloodRecords.Recent_Transfusion}</td>
+          <td>${bloodRecords.Diagnosis}</td>
+          <td>${bloodRecords.High_Risk}</td>
+          <td>${bloodRecords.GS}</td>
+          <td>${bloodRecords.DAT}</td>
+          <td>${bloodRecords.Other_Test}</td>
+          <td>${bloodRecords.DateTimeRequired}</td>
+          <td>${bloodRecords.CMV}</td>
+          <td>${bloodRecords.IR}</td>
+      
+          <td>${bloodRecords.RC}</td>
+          <td>${bloodRecords.RC_Reason}</td>
+          <td>${bloodRecords.RC_OtherReason}</td>
+          <td>${bloodRecords.RC_Measurement}: ${bloodRecords.RC_Quantity}</td>
+          
+          <td>${bloodRecords.Platelets}</td>
+          <td>${bloodRecords.Platelets_Reason}</td>
+          <td>${bloodRecords.Platelets_OtherReason}</td>
+          <td>${bloodRecords.Platelets_Measurement}: ${bloodRecords.Platelets_Quantity}</td>
+          
+          <td>${bloodRecords.FFP}</td>
+          <td>${bloodRecords.FFP_Reason}</td>
+          <td>${bloodRecords.FFP_OtherReason}</td>
+          <td>${bloodRecords.FFP_Measurement}: ${bloodRecords.FFP_Quantity}</td>
+          
+          <td>${bloodRecords.Cryo}</td>
+          <td>${bloodRecords.Cryo_Reason}</td>
+          <td>${bloodRecords.Cryo_OtherReason}</td>
+          <td>${bloodRecords.Cryo_Measurement}: ${bloodRecords.Cryo_Quantity}</td>
+        </tr>`
+        RequestList.innerHTML += bloodRequestElements;
+
+    });
+
+  });
+
+}
+
+/*----------------------------------------------------------------------------------------------------------*/
+
+//POST request using Fetch API 
+function addRecord(url_page, formData) {
+  fetch(url_page, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "X-Requested-With": "XMLHttpRequest",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    body: JSON.stringify({bloodRequestData: formData})
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+  });
+}
+
+/*----------------------------------------------------------------------------------------------------------*/
+
+  (function() {
+
+    //Get URL of page
+    const url_page = "{% url 'transactions' %}";
+
+    //Event listener for GET request
+    const readButton = document.querySelector("#getRecords");
+    readButton.addEventListener("click", () => {
+    //Call function getAllRecords, Fetch API GET request is wrapped in this function. 
+      getAllRecords(url_page);
+    });
+
+/*----------------------------------------------------------------------------------------------------------*/
+
+    //Event listener for POST request and getting form element values. 
+
+    //Query form element and pass as a constant variable
+    const bloodForm = document.querySelector("#Bloodform");
+    //Prevent default behaviour/ page reload on submit
+    bloodForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      //Get values from form elements
+      const formData = {
+        Diagnosis: bloodForm.elements["Diagnosis"].value,
+        Urgent: bloodForm.elements["Urgent"].checked,
+        Pregnant: bloodForm.elements["Pregnant"].checked,
+        Transfusion: bloodForm.elements["Transfusion"].checked,
+        HighRisk: bloodForm.elements["HighRisk"].checked,
+        GS: bloodForm.elements["G&S"].checked,
+        DAT: bloodForm.elements["DAT"].checked,
+        OtherTest: bloodForm.elements["OtherTest"].value,
+        CMV: bloodForm.elements["CMV"].value,
+        IR: bloodForm.elements["IR"].value,
+        
+        RC: bloodForm.elements["RC"].checked,
+        RC_Metric: bloodForm.elements["RC_Metric"].value,
+        RC_Quantity: bloodForm.elements["RC_Quantity"].value,
+        RC_Reason: bloodForm.elements["RC_Reason"].value,
+        RC_OtherReason: bloodForm.elements["OtherReason_RC"].value,
+
+        PLT: bloodForm.elements["PLT"].checked,
+        PLT_Metric: bloodForm.elements["PLT_Metric"].value,
+        PLT_Quantity: bloodForm.elements["PLT_Quantity"].value,
+        PLT_Reason: bloodForm.elements["PLT_Reason"].value,
+        PLT_OtherReason: bloodForm.elements["OtherReason_PLT"].value,
+
+        FFP: bloodForm.elements["FFP"].checked,
+        FFP_Metric: bloodForm.elements["FFP_Metric"].value,
+        FFP_Quantity: bloodForm.elements["FFP_Quantity"].value,
+        FFP_Reason: bloodForm.elements["FFP_Reason"].value,
+        FFP_OtherReason: bloodForm.elements["OtherReason_FFP"].value,
+
+        CRYO: bloodForm.elements["CRYO"].checked,
+        CRYO_Metric: bloodForm.elements["CRYO_Metric"].value,
+        CRYO_Quantity: bloodForm.elements["CRYO_Quantity"].value,
+        CRYO_Reason: bloodForm.elements["CRYO_Reason"].value,
+        CRYO_OtherReason: bloodForm.elements["OtherReason_CRYO"].value,
+
+        DateTimeRequired: bloodForm.elements["DateTimeRequired"].value,
+        SystemNumber: bloodForm.elements["SystemNumber"].value
+      }
+      
+
+      //Call function addRecord, Fetch API POST request is wrapped in this function. 
+      addRecord(url_page, formData);
+
+
+      //Reset form elements
+      bloodForm.reset();
+
+    });
+
+  })();
+
+/*----------------------------------------------------------------------------------------------------------*/
+
+//Event listeners for hiding and showing div content
+
+//Query div elements and store in a constant variable
+const RC = document.querySelector("#RC_request")
+const PLT = document.querySelector("#PLT_request")
+const FFP = document.querySelector("#FFP_request")
+const CRYO = document.querySelector("#CRYO_request")
+
+//Query checkboxes and store in a constant variable
+const RC_checkbox = document.querySelector("#RC")
+const PLT_checkbox = document.querySelector("#PLT")
+const FFP_checkbox = document.querySelector("#FFP")
+const CRYO_checkbox = document.querySelector("#CRYO")
+
+//Query "quantity" inputs and store in a constant variable
+const RC_quantity = document.querySelector("#RC_Quantity")
+const PLT_quantity = document.querySelector("#PLT_Quantity")
+const FFP_quantity = document.querySelector("#FFP_Quantity")
+const CRYO_quantity = document.querySelector("#CRYO_Quantity")
+
+
+//Script to handle showing div content based on RC selection
+RC_checkbox.addEventListener("change",() => {
+  if(RC_checkbox.checked){
+    RC.style.display = 'block';
+  } else {
+    RC.style.display = 'none';
+    RC_quantity.value = 0;
+  }
+})
+
+//Script to handle showing div content based on PLT selection
+PLT_checkbox.addEventListener("change",() => {
+  if(PLT_checkbox.checked){
+    PLT.style.display = 'block';
+  } else {
+    PLT.style.display = 'none';
+    PLT_quantity.value = 0;
+  }
+})
+
+//Script to handle showing div content based on FFP selection
+FFP_checkbox.addEventListener("change",()=>{
+  if(FFP_checkbox.checked){
+    FFP.style.display = 'block';
+  } else {
+    FFP.style.display = 'none';
+    FFP_quantity.value = 0;
+  }
+})
+
+//Script to handle showing div content based on CRYO selection
+CRYO_checkbox.addEventListener("change",()=>{
+  if(CRYO_checkbox.checked){
+    CRYO.style.display = 'block';
+  } else {
+    CRYO.style.display = 'none';
+    CRYO_quantity.value = 0;
+  }
+})
+
+/*----------------------------------------------------------------------------------------------------------*/
+
+</script>
+
+{% endblock %}
