@@ -6,4 +6,4 @@ This project uses Fetch API (AJAX) in JavaScript to ensure real-time CRUD functi
 
 #
 
-Copyright 2024 @KamalRajput1998
+Copyright @KamalRajput1998
